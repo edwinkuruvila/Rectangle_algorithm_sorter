@@ -6,14 +6,14 @@ import time
 
 # ----- Creates beginning elements -----#
 root = Tk()
-W, H = 500, 600
+W, H = 800, 1000
 rect_position = {}
 SortType = StringVar()
-SorterOPTS = ['Quick Sort', 'Selection Sort', 'Bubble Sort']
+SorterOPTS = ['Quick Sort', 'Selection Sort', 'Bubble Sort', 'Radix Sort']
 root.title('Rectangle Organizer')
-root.geometry(("{}x{}").format(W, H//2))
+root.geometry(("{}x{}").format(W, int(H//2.5)))
 root.resizable(0, 0)
-SortType.set(SorterOPTS[2])
+SortType.set(SorterOPTS[3])
 runAmount = 0
 runCycle_EndIND = 0
 
@@ -26,7 +26,7 @@ Num_rect.grid(row=0, column=1, sticky='W')
 
 
 # ----- Creating rectangles -----#
-def draw_rect(Tsorter, WHICHrect=-1):
+def draw_rect(Tsorter, WHICHrect=-1, fill='#008000'):
     canvas.delete("MyR")
     NR = int(Num_rect.get())
     width_rectangles = (canvas_width-10)/NR
@@ -48,34 +48,29 @@ def draw_rect(Tsorter, WHICHrect=-1):
     if Tsorter == False and WHICHrect == -100:
         for RHassign in range(NR):
             canvas.create_rectangle(
-                rect_startPos, rect_position[RHassign], rect_startPos+width_rectangles, canvas_height, tags='MyR', fill='#008000')
+                rect_startPos, rect_position[RHassign], rect_startPos+width_rectangles, canvas_height, tags='MyR', fill=fill)
             rect_startPos += width_rectangles
+
+# Randomizes the rectangles <resets>
 
 
 def create_rectsN():
     NR = int(Num_rect.get())
     for RHassign in range(NR):
-        rect_position[RHassign] = random.randint(11, canvas_height-10)
+        rect_position[RHassign] = random.randint(11, int(canvas_height-10))
     draw_rect(False)
 
 
 # ----- Sorting rectangles -----#
-def sortingList():
-    global SSsorting
-    SSsorting = []
-    for i in range(NR):
-        SSsorting.append(rect_position[i])
-
-
 def selectionSort():
     global runAmount
     num = runAmount
     for i in range(NR):
         rect_position[i] = SSsorting[i]
     root.after(20, draw_rect, True, num)
-    for numchecker in range(num+1, NR):
-        if SSsorting[numchecker] > SSsorting[num]:
-            num = numchecker
+    for heightChecker in range(num+1, NR):
+        if SSsorting[heightChecker] > SSsorting[num]:
+            num = heightChecker
     root.after(10, draw_rect, True, num)
     SSsorting[runAmount], SSsorting[num] = SSsorting[num], SSsorting[runAmount]
     runAmount += 1
@@ -87,36 +82,81 @@ def selectionSort():
 
 
 def bubbleSort():
-    global runAmount
-    global runCycle_EndIND
-    for i in range(NR):
-        rect_position[i] = SSsorting[i]
-    root.after(5, draw_rect, True, runAmount+1)
-    if SSsorting[runAmount] < SSsorting[runAmount+1]:
-        SSsorting[runAmount], SSsorting[runAmount +
-                                        1] = SSsorting[runAmount+1], SSsorting[runAmount]
-        runCycle_EndIND += 1
-    for i in range(NR):
-        rect_position[i] = SSsorting[i]
-    root.after(0, draw_rect, True, runAmount+1)
-    if runCycle_EndIND == 0 and runAmount == NR-2:
+    runAmount = 0
+    for heightChecker in range(NR-1):
+        if SSsorting[heightChecker] < SSsorting[heightChecker+1]:
+            SSsorting[heightChecker], SSsorting[heightChecker +
+                                                1] = SSsorting[heightChecker+1], SSsorting[heightChecker]
+            runAmount += 1
+    if runAmount == 0:
         for i in range(NR):
             rect_position[i] = SSsorting[i]
-        runAmount = 0
-        runCycle_EndIND = 0
-        root.after(5, draw_rect, False, -100)
+        draw_rect(False, -100)
         return
-    runAmount += 1
-    if runAmount == NR-1:
+    for i in range(NR):
+        rect_position[i] = SSsorting[i]
+    draw_rect(False, -100, '#FF0000')
+    root.after(25, bubbleSort)
+
+
+a = 0
+
+
+def radixSortCONT():
+    global a
+    for heightChecker in range(NR-1):
+        if len(str(SSsorting[heightChecker])) < len(str((SSsorting[heightChecker+1]))):
+            SSsorting[heightChecker], SSsorting[heightChecker +
+                                                1] = SSsorting[heightChecker+1], SSsorting[heightChecker]
+            # a+=1
+        elif len(str(SSsorting[heightChecker])) >= -runAmount and len(str(SSsorting[heightChecker+1])) >= -runAmount:
+            if int(str(SSsorting[heightChecker])[runAmount]) < int(str(SSsorting[heightChecker+1])[runAmount]):
+                SSsorting[heightChecker], SSsorting[heightChecker +
+                                                    1] = SSsorting[heightChecker+1], SSsorting[heightChecker]
+            # a+=1
+    for i in range(NR):
+        rect_position[i] = SSsorting[i]
+    root.after(10, draw_rect, True, heightChecker)
+    a += 1
+    if a == NR:
+        a = 0
+        return
+    root.after(50, radixSortCONT)
+
+
+def radixSort():
+    global runAmount
+    runAmount -= 1
+    # for _ in range(NR):
+    # for heightChecker in range(NR-1):
+    #     if len(str(SSsorting[heightChecker])) < len(str((SSsorting[heightChecker+1]))):
+    #         SSsorting[heightChecker], SSsorting[heightChecker +
+    #                                             1] = SSsorting[heightChecker+1], SSsorting[heightChecker]
+    #     elif len(str(SSsorting[heightChecker])) >= -runAmount and len(str(SSsorting[heightChecker+1])) >= -runAmount:
+    #         if int(str(SSsorting[heightChecker])[runAmount]) < int(str(SSsorting[heightChecker+1])[runAmount]):
+    #             SSsorting[heightChecker], SSsorting[heightChecker +
+    #                                                 1] = SSsorting[heightChecker+1], SSsorting[heightChecker]
+    # for i in range(NR):
+    #     rect_position[i] = SSsorting[i]
+    # root.after(25, draw_rect, False, -100, '#FF0000')
+    radixSortCONT()
+
+    if runAmount == -3:
         runAmount = 0
-        runCycle_EndIND = 0
-    root.after(5, bubbleSort)
+        for i in range(NR):
+            rect_position[i] = SSsorting[i]
+        root.after(500, draw_rect, False, -100)
+        return
+    root.after(500, radixSort)
 
 
 def sort():
     global NR
+    global SSsorting
     NR = int(Num_rect.get())
-    sortingList()
+    SSsorting = []
+    for i in range(NR):
+        SSsorting.append(rect_position[i])
     errorLabel.configure(text=' ')
     if SortType.get() == 'Quick Sort':
         SSsorting.sort(reverse=True)
@@ -126,12 +166,17 @@ def sort():
     elif SortType.get() == 'Selection Sort':
         selectionSort()
     elif SortType.get() == 'Bubble Sort':
-        if int(Num_rect.get()) > 30:
+        if NR > 500:
             errorLabel.configure(text='Error:TooMany!')
-        elif int(Num_rect.get()) == 1:
+        elif NR < 2:
             errorLabel.configure(text='Error:NotEnough!')
         else:
             bubbleSort()
+    elif SortType.get() == 'Radix Sort':
+        if NR > 200:
+            errorLabel.configure(text='Error:TooMany!')
+        else:
+            radixSort()
 
 
 # ----- Menu Items -----#
@@ -158,4 +203,3 @@ canvas.create_line(canvas_width-5, 10, canvas_width -
                    5, canvas_height, fill="#476042")
 
 root.mainloop()
-
