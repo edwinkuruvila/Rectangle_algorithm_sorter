@@ -99,55 +99,28 @@ def bubbleSort():
     root.after(25, bubbleSort)
 
 
-a = 0
-
-
-def radixSortCONT():
-    global a
-    for heightChecker in range(NR-1):
-        if len(str(SSsorting[heightChecker])) < len(str((SSsorting[heightChecker+1]))):
-            SSsorting[heightChecker], SSsorting[heightChecker +
-                                                1] = SSsorting[heightChecker+1], SSsorting[heightChecker]
-            # a+=1
-        elif len(str(SSsorting[heightChecker])) >= -runAmount and len(str(SSsorting[heightChecker+1])) >= -runAmount:
-            if int(str(SSsorting[heightChecker])[runAmount]) < int(str(SSsorting[heightChecker+1])[runAmount]):
-                SSsorting[heightChecker], SSsorting[heightChecker +
-                                                    1] = SSsorting[heightChecker+1], SSsorting[heightChecker]
-            # a+=1
-    for i in range(NR):
-        rect_position[i] = SSsorting[i]
-    root.after(10, draw_rect, True, heightChecker)
-    a += 1
-    if a == NR:
-        a = 0
-        return
-    root.after(50, radixSortCONT)
-
-
 def radixSort():
     global runAmount
     runAmount -= 1
-    # for _ in range(NR):
-    # for heightChecker in range(NR-1):
-    #     if len(str(SSsorting[heightChecker])) < len(str((SSsorting[heightChecker+1]))):
-    #         SSsorting[heightChecker], SSsorting[heightChecker +
-    #                                             1] = SSsorting[heightChecker+1], SSsorting[heightChecker]
-    #     elif len(str(SSsorting[heightChecker])) >= -runAmount and len(str(SSsorting[heightChecker+1])) >= -runAmount:
-    #         if int(str(SSsorting[heightChecker])[runAmount]) < int(str(SSsorting[heightChecker+1])[runAmount]):
-    #             SSsorting[heightChecker], SSsorting[heightChecker +
-    #                                                 1] = SSsorting[heightChecker+1], SSsorting[heightChecker]
-    # for i in range(NR):
-    #     rect_position[i] = SSsorting[i]
-    # root.after(25, draw_rect, False, -100, '#FF0000')
-    radixSortCONT()
-
+    for _ in range(NR):
+        for heightChecker in range(NR-1):
+            if len(str(SSsorting[heightChecker])) < len(str((SSsorting[heightChecker+1]))):
+                SSsorting[heightChecker], SSsorting[heightChecker +
+                                                    1] = SSsorting[heightChecker+1], SSsorting[heightChecker]
+            elif len(str(SSsorting[heightChecker])) >= -runAmount and len(str(SSsorting[heightChecker+1])) >= -runAmount:
+                if int(str(SSsorting[heightChecker])[runAmount]) < int(str(SSsorting[heightChecker+1])[runAmount]):
+                    SSsorting[heightChecker], SSsorting[heightChecker +
+                                                        1] = SSsorting[heightChecker+1], SSsorting[heightChecker]
+    for i in range(NR):
+        rect_position[i] = SSsorting[i]
+    root.after(50, draw_rect, False, -100, '#FF0000')
     if runAmount == -3:
         runAmount = 0
         for i in range(NR):
             rect_position[i] = SSsorting[i]
-        root.after(500, draw_rect, False, -100)
+        root.after(50, draw_rect, False, -100)
         return
-    root.after(500, radixSort)
+    root.after(1000, radixSort)
 
 
 def sort():
