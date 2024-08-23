@@ -9,13 +9,13 @@ root = Tk()
 W, H = 800, 1000
 rect_position = {}
 SortType = StringVar()
-SorterOPTS = ['Quick Sort', 'Selection Sort', 'Bubble Sort', 'Radix Sort']
+SorterOPTS = ['Quick Sort', 'Selection Sort',
+              'Bubble Sort', 'Radix Sort']
 root.title('Rectangle Organizer')
 root.geometry(("{}x{}").format(W, int(H//2.5)))
 root.resizable(0, 0)
 SortType.set(SorterOPTS[3])
 runAmount = 0
-runCycle_EndIND = 0
 
 
 # ----- Inputs # of rectangles from user -----#
@@ -51,9 +51,8 @@ def draw_rect(Tsorter, WHICHrect=-1, fill='#008000'):
                 rect_startPos, rect_position[RHassign], rect_startPos+width_rectangles, canvas_height, tags='MyR', fill=fill)
             rect_startPos += width_rectangles
 
+
 # Randomizes the rectangles <resets>
-
-
 def create_rectsN():
     NR = int(Num_rect.get())
     for RHassign in range(NR):
@@ -121,15 +120,14 @@ def radixSort():
         root.after(50, draw_rect, False, -100)
         return
     root.after(1000, radixSort)
-
-
+            
 def sort():
     global NR
     global SSsorting
     NR = int(Num_rect.get())
     SSsorting = []
-    for i in range(NR):
-        SSsorting.append(rect_position[i])
+    for rectangles in range(NR):
+        SSsorting.append(rect_position[rectangles])
     errorLabel.configure(text=' ')
     if SortType.get() == 'Quick Sort':
         SSsorting.sort(reverse=True)
@@ -144,6 +142,7 @@ def sort():
         elif NR < 2:
             errorLabel.configure(text='Error:NotEnough!')
         else:
+            errorLabel.configure(text='')
             bubbleSort()
     elif SortType.get() == 'Radix Sort':
         if NR > 200:
